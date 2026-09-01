@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { siteUrl } from "@/lib/site";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -8,7 +9,6 @@ const inter = Inter({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-const siteUrl = "https://www.ambientalconsultoria.com.br";
 const siteName = "Ambiental Consultoria";
 const siteDescription =
   "Consultoria ambiental e segurança do trabalho com portal próprio para acompanhar licenciamento, laudos, programas obrigatórios e indicadores em tempo real.";

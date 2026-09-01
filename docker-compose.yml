@@ -1,0 +1,39 @@
+name: ambiental-landing
+
+services:
+  landing:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://portal.bomanejo.com.br}
+        NEXT_PUBLIC_PORTAL_URL: ${NEXT_PUBLIC_PORTAL_URL:-https://financeiro.bomanejo.com.br}
+        NEXT_PUBLIC_CMS_API_URL: ${NEXT_PUBLIC_CMS_API_URL:-}
+    container_name: ambiental_landing
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+      CMS_PROVIDER: ${CMS_PROVIDER:-api}
+      CMS_API_URL: ${CMS_API_URL:-http://api:3333}
+      CMS_ORG_SLUG: ${CMS_ORG_SLUG:-ambiental-system}
+      OMNICHANNEL_INGEST_SECRET: ${OMNICHANNEL_INGEST_SECRET:-}
+      LANDING_PREVIEW_SECRET: ${LANDING_PREVIEW_SECRET:-}
+      PREVIEW_SECRET: ${PREVIEW_SECRET:-}
+      SANITY_PROJECT_ID: ${SANITY_PROJECT_ID:-}
+      SANITY_DATASET: ${SANITY_DATASET:-production}
+      SANITY_API_VERSION: ${SANITY_API_VERSION:-2025-01-01}
+      SANITY_READ_TOKEN: ${SANITY_READ_TOKEN:-}
+    expose:
+      - "3000"
+    networks:
+      ambiental:
+        aliases:
+          - landing
+
+networks:
+  ambiental:
+    name: bomanejo_ambiental
+    external: true

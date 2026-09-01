@@ -37,6 +37,8 @@ import type {
   Solucao,
 } from "@/types/content";
 
+export { portalUrl, siteUrl } from "@/lib/site";
+
 /** Dados reais da Ambiental Consultoria e Serviços (Macapá — AP), a partir do
  *  projeto de design importado — substitui os placeholders anteriores. */
 export const contactInfo = {
@@ -76,9 +78,6 @@ export const navItems: NavItem[] = [
   { label: "FAQ", href: "#faq" },
   { label: "Contato", href: "#contato" },
 ];
-
-export const portalUrl =
-  process.env.NEXT_PUBLIC_PORTAL_URL ?? "https://portal.ambientalconsultoria.com.br";
 
 export const metricasProvaSocial: MetricaProvaSocial[] = [
   {
