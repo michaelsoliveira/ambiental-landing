@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #101613;
+  /* Altura do Header fixo (nav mobile; + tarja no lg) — alinhar com pt das páginas internas */
+  --site-header-height: 4.5rem;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --site-header-height: 6.25rem;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+
+  /* Primária — Ambiental (SDD-01 §2.1) */
+  --color-primary-50: #ecfdf5;
+  --color-primary-100: #d1fae5;
+  --color-primary-400: #34d399;
+  --color-primary-500: #10b981;
+  --color-primary-600: #059669;
+  --color-primary-700: #047857;
+  --color-primary-900: #064e3b;
+
+  /* Accent — Segurança do Trabalho (SDD-01 §2.2) */
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+
+  /* Tech/Portal — Monitoramento e dados (SDD-01 §2.3) */
+  --color-tech-400: #38bdf8;
+  --color-tech-600: #0284c7;
+  --color-tech-700: #0369a1;
+  --color-tech-900: #0c4a6e;
+
+  /* Neutros — leve matiz verde-acinzentado (SDD-01 §2.4) */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f7faf9;
+  --color-neutral-100: #eef2f0;
+  --color-neutral-300: #cbd5d1;
+  --color-neutral-500: #64766e;
+  --color-neutral-700: #33403a;
+  --color-neutral-900: #101613;
+
+  /* Semânticas (SDD-01 §2.5) */
+  --color-success: #059669;
+  --color-warning: #f59e0b;
+  --color-danger: #dc2626;
+  --color-info: #0284c7;
+
+  /* Escala tipográfica (SDD-01 §3) */
+  --text-display: clamp(1.875rem, 2.75vw + 1.15rem, 2.75rem);
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 700;
+
+  --text-h1: clamp(2rem, 2.5vw + 1.25rem, 2.75rem);
+  --text-h1--line-height: 1.2;
+  --text-h1--font-weight: 700;
+
+  --text-h2: 2rem;
+  --text-h2--line-height: 1.25;
+  --text-h2--font-weight: 600;
+
+  --text-h3: 1.375rem;
+  --text-h3--line-height: 1.375;
+  --text-h3--font-weight: 600;
+
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.625;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.625;
+
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.4;
+
+  --text-micro: 0.75rem;
+  --text-micro--line-height: 1.2;
+  --text-micro--letter-spacing: 0.06em;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+.site-main-offset {
+  padding-top: var(--site-header-height);
+}
+
+.tabular-nums {
+  font-feature-settings: "tnum";
+}
+
+@keyframes hero-kenburns {
+  from {
+    transform: scale(1.03);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+/** Ken Burns — apenas layout split (card 4:3), não hero imersivo full-bleed. */
+.hero-kenburns {
+  overflow: hidden;
+}
+
+.hero-kenburns img {
+  animation: hero-kenburns 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.hero-parallax {
+  transform: translateZ(0);
+  transition: transform 0.4s ease-out;
+}
+
+.hero-parallax img,
+.hero-parallax video {
+  transform: scale(1.04);
+  will-change: transform;
+}
+
+/** Destaque curto — faixa verde sólida (referência Ambipar). */
+.hero-highlight-pill {
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  border-radius: 0.2rem;
+  background-color: var(--color-primary-400);
+  padding: 0.08em 0.4em;
+  color: var(--color-neutral-900);
+  font-weight: 800;
+  line-height: 1.35;
+  box-shadow: 0 2px 16px rgb(52 211 153 / 0.35);
+}
+
+/** Destaque longo — faixa glass com borda verde (legível sobre vídeo). */
+.hero-highlight-band {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 0.45rem;
+  border-left: 3px solid var(--color-primary-400);
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: rgb(16 22 19 / 0.62);
+  padding: 0.45rem 0.85rem;
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: clamp(1.125rem, 1.6vw + 0.65rem, 1.625rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.hero-display {
+  font-size: clamp(1.875rem, 2.8vw + 0.85rem, 3.125rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+  text-shadow: 0 2px 24px rgb(0 0 0 / 0.35);
+}
+
+.hero-eyebrow {
+  display: inline-block;
+  border-radius: 9999px;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  background: rgb(16 22 19 / 0.4);
+  padding: 0.35rem 0.75rem;
+  font-size: var(--text-micro);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.88);
+  backdrop-filter: blur(8px);
+}
+
+.hero-subheadline {
+  border-radius: 1rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: rgb(16 22 19 / 0.42);
+  padding: 1rem 1.15rem;
+  font-size: var(--text-body-lg);
+  line-height: 1.55;
+  color: rgb(255 255 255 / 0.92);
+  backdrop-filter: blur(14px);
+}
+
+.hero-content-panel {
+  position: relative;
+}
+
+.hero-metrics-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0;
+  width: fit-content;
+  max-width: 100%;
+  border-radius: 0.875rem;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  background: rgb(16 22 19 / 0.38);
+  backdrop-filter: blur(12px);
+}
+
+.hero-metric-item {
+  padding: 0.75rem 1.15rem;
+}
+
+.hero-metric-item-divider {
+  border-left: 1px solid rgb(255 255 255 / 0.12);
+}
+
+.hero-accent-text {
+  font-size: clamp(3.5rem, 7vw + 1rem, 6.5rem);
+  font-weight: 800;
+  color: rgb(255 255 255 / 0.14);
+  text-shadow: 0 0 40px rgb(52 211 153 / 0.08);
+  -webkit-text-stroke: 1px rgb(255 255 255 / 0.06);
+}
+
+/** Evita linha de 1px entre hero e seção seguinte. */
+#top + * {
+  margin-top: 0;
+}
+
+.hero-metric-card {
+  border-radius: 0.75rem;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  background: rgb(16 22 19 / 0.48);
+  padding: 0.875rem 1rem;
+  backdrop-filter: blur(12px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-kenburns img {
+    animation: none;
+  }
+
+  .hero-parallax img,
+  .hero-parallax video {
+    transform: none;
+  }
+
+  video[autoplay] {
+    animation: none;
+  }
+}
