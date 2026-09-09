@@ -20,6 +20,14 @@ export const metadata: Metadata = {
     template: "%s | Ambiental Consultoria",
   },
   description: siteDescription,
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/favicon-96x96.png", type: "image/png", sizes: "96x96" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    shortcut: "/favicon.ico",
+  },
   openGraph: {
     title: `${siteName} — Consultoria Ambiental e Segurança do Trabalho`,
     description: siteDescription,
@@ -42,6 +50,8 @@ const organizationJsonLd = {
   "@type": "Organization",
   name: "Ambiental Consultoria e Serviços Ambientais e Segurança do Trabalho",
   url: siteUrl,
+  logo: `${siteUrl}/apple-touch-icon.png`,
+  image: `${siteUrl}/apple-touch-icon.png`,
   description: siteDescription,
 };
 
@@ -50,6 +60,7 @@ const professionalServiceJsonLd = {
   "@type": "ProfessionalService",
   name: "Ambiental Consultoria e Serviços Ambientais e Segurança do Trabalho",
   url: siteUrl,
+  logo: `${siteUrl}/apple-touch-icon.png`,
   areaServed: "BR",
   serviceType: [
     "Consultoria Ambiental",
