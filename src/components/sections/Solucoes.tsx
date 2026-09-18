@@ -36,13 +36,24 @@ export function Solucoes({ content }: Props) {
                   <h3 className="mt-5 text-h3 text-neutral-900">{solucao.titulo}</h3>
                   <p className="mt-2 text-body text-justify text-neutral-500">{solucao.descricao}</p>
                   {solucao.children.length > 0 && (
-                    <ul className="mt-4 space-y-1 border-t border-neutral-200/80 pt-3">
+                    <ul className="mt-4 space-y-1.5 border-t border-neutral-200/80 pt-3">
                       {solucao.children.map((child) => (
-                        <li
-                          key={child.id}
-                          className="text-small font-medium text-primary-700"
-                        >
-                          {child.titulo}
+                        <li key={child.id} className="text-small">
+                          <span className="font-medium text-primary-700">
+                            {child.titulo}
+                          </span>
+                          {child.children.length > 0 && (
+                            <ul className="mt-1 space-y-0.5 border-l border-primary-100 pl-3">
+                              {child.children.map((grand) => (
+                                <li
+                                  key={grand.id}
+                                  className="text-micro text-neutral-500"
+                                >
+                                  {grand.titulo}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
                         </li>
                       ))}
                     </ul>

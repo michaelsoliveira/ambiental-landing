@@ -11,6 +11,7 @@ import {
   getRootSolucoes,
   resolveSolucaoGroup,
   type SolucaoItem,
+  type SolucaoNode,
 } from "@/lib/content/solucoes-tree";
 import type { SolucoesContent } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
@@ -47,39 +48,46 @@ function FilterButton({
 function ServicoCard({
   svc,
   invertido,
-  nested,
+  depth = 1,
 }: {
   svc: SolucaoItem;
   invertido?: boolean;
-  nested?: boolean;
+  depth?: number;
 }) {
   const Icon = CONTENT_ICONS[svc.iconKey];
+  const nested = depth > 1;
+  const deep = depth > 2;
   return (
     <div
       id={svc.id}
       className={cn(
         "scroll-mt-40 grid grid-cols-1 items-center gap-8 rounded-2xl border bg-white p-8 shadow-sm lg:grid-cols-2 lg:gap-10",
-        nested
-          ? "border-primary-100 bg-primary-50/30 p-6 lg:gap-8"
-          : "border-neutral-100",
+        deep
+          ? "border-primary-100/80 bg-white p-5 lg:gap-6"
+          : nested
+            ? "border-primary-100 bg-primary-50/30 p-6 lg:gap-8"
+            : "border-neutral-100",
       )}
     >
       <div className={cn(invertido && "lg:order-2")}>
         <span
           className={cn(
             "flex items-center justify-center rounded-xl border border-primary-100 bg-primary-50",
-            nested ? "h-10 w-10" : "h-12 w-12",
+            deep ? "h-9 w-9" : nested ? "h-10 w-10" : "h-12 w-12",
           )}
         >
           <Icon
-            className={cn(nested ? "h-5 w-5" : "h-6 w-6", "text-primary-700")}
+            className={cn(
+              deep ? "h-4 w-4" : nested ? "h-5 w-5" : "h-6 w-6",
+              "text-primary-700",
+            )}
             strokeWidth={1.75}
           />
         </span>
         <h2
           className={cn(
             "mt-4 text-neutral-900",
-            nested ? "text-h3" : "text-h2",
+            deep ? "text-h3" : nested ? "text-h3" : "text-h2",
           )}
         >
           {svc.titulo}
@@ -102,7 +110,7 @@ function ServicoCard({
       <div
         className={cn(
           "relative overflow-hidden rounded-2xl bg-neutral-50",
-          nested ? "h-44 lg:h-52" : "h-56 lg:h-64",
+          deep ? "h-36 lg:h-44" : nested ? "h-44 lg:h-52" : "h-56 lg:h-64",
           invertido && "lg:order-1",
         )}
       >
@@ -126,11 +134,43 @@ function ServicoCard({
   );
 }
 
+function ServicoBranch({
+  node,
+  depth,
+  invertRoot,
+}: {
+  node: SolucaoNode;
+  depth: number;
+  invertRoot?: boolean;
+}) {
+  return (
+    <div className="flex flex-col gap-3">
+      <ServicoCard svc={node} invertido={invertRoot} depth={depth} />
+      {node.children.length > 0 && (
+        <div
+          className={cn(
+            "flex flex-col gap-3 border-l-2 pl-4 lg:pl-6",
+            depth === 1 ? "border-primary-200" : "border-primary-100",
+          )}
+        >
+          <p className="text-micro font-semibold uppercase tracking-wide text-primary-700">
+            {depth === 1
+              ? `Especialidades em ${node.titulo}`
+              : `Em ${node.titulo}`}
+          </p>
+          {node.children.map((child) => (
+            <ServicoBranch key={child.id} node={child} depth={depth + 1} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function ServicosDetail({ items }: Props) {
   const [filter, setFilter] = useState<string>("all");
   const roots = getRootSolucoes(items);
 
-  /** Espelha Servicos.dc.html — hash #id filtra o serviço correspondente. */
   useEffect(() => {
     const syncHash = () => {
       const id = window.location.hash.replace("#", "");
@@ -146,14 +186,12 @@ export function ServicosDetail({ items }: Props) {
       ? null
       : (resolveSolucaoGroup(items, filter)?.root.id ?? filter);
 
-  const groups =
+  const groups: SolucaoNode[] =
     filter === "all"
       ? buildSolucaoTree(items)
       : (() => {
           const group = resolveSolucaoGroup(items, filter);
-          return group
-            ? [{ ...group.root, children: group.children }]
-            : [];
+          return group ? [group.tree] : [];
         })();
 
   return (
@@ -186,19 +224,12 @@ export function ServicosDetail({ items }: Props) {
 
       <section className="mx-auto flex max-w-7xl flex-col gap-10 px-6 py-8 lg:px-8">
         {groups.map((group, index) => (
-          <div key={group.id} className="flex flex-col gap-4">
-            <ServicoCard svc={group} invertido={index % 2 === 1} />
-            {group.children.length > 0 && (
-              <div className="flex flex-col gap-3 border-l-2 border-primary-200 pl-4 lg:pl-6">
-                <p className="text-micro font-semibold uppercase tracking-wide text-primary-700">
-                  Especialidades em {group.titulo}
-                </p>
-                {group.children.map((child) => (
-                  <ServicoCard key={child.id} svc={child} nested />
-                ))}
-              </div>
-            )}
-          </div>
+          <ServicoBranch
+            key={group.id}
+            node={group}
+            depth={1}
+            invertRoot={index % 2 === 1}
+          />
         ))}
       </section>
     </>

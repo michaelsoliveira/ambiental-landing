@@ -1,9 +1,15 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, ImageIcon, X } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import type { ProjetosContent, SolucoesContent } from "@/lib/content/types";
+import {
+  flattenSolucaoTree,
+  getDescendantIds,
+  getRootSolucoes,
+  getSolucaoPathLabel,
+} from "@/lib/content/solucoes-tree";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -193,21 +199,55 @@ export function ProjetosGrid({ items, categorias }: Props) {
   const [openProjeto, setOpenProjeto] = useState<ProjetoItem | null>(null);
   const [galleryIndex, setGalleryIndex] = useState(0);
 
-  const categoriaTitulo = new Map(categorias.map((c) => [c.id, c.titulo]));
-  const visible = filter === "all" ? items : items.filter((p) => p.categoria === filter);
+  const roots = useMemo(() => getRootSolucoes(categorias), [categorias]);
+  const flatTree = useMemo(() => flattenSolucaoTree(categorias), [categorias]);
+
+  /** Filtro por nó inclui projetos daquele id e de todos os descendentes. */
+  const visible = useMemo(() => {
+    if (filter === "all") return items;
+    const ids = getDescendantIds(categorias, filter);
+    return items.filter((p) => ids.has(p.categoria));
+  }, [items, categorias, filter]);
+
+  const activeRootId =
+    filter === "all"
+      ? null
+      : (roots.find((r) => getDescendantIds(categorias, r.id).has(filter))?.id ??
+        null);
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
-      <div className="flex flex-wrap gap-2 border-b border-neutral-100 pb-6">
+      <div className="flex flex-wrap gap-2 border-b border-neutral-100 pb-4">
         <FilterButton active={filter === "all"} onClick={() => setFilter("all")}>
           Todos
         </FilterButton>
-        {categorias.map((c) => (
-          <FilterButton key={c.id} active={filter === c.id} onClick={() => setFilter(c.id)}>
+        {roots.map((c) => (
+          <FilterButton
+            key={c.id}
+            active={filter !== "all" && getDescendantIds(categorias, c.id).has(filter)}
+            onClick={() => setFilter(c.id)}
+          >
             {c.titulo}
           </FilterButton>
         ))}
       </div>
+
+      {filter !== "all" && (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {flatTree
+            .filter((row) => getDescendantIds(categorias, activeRootId ?? filter).has(row.item.id))
+            .filter((row) => row.depth > 1)
+            .map((row) => (
+              <FilterButton
+                key={row.item.id}
+                active={filter === row.item.id}
+                onClick={() => setFilter(row.item.id)}
+              >
+                {row.depth > 2 ? `↳ ${row.item.titulo}` : row.item.titulo}
+              </FilterButton>
+            ))}
+        </div>
+      )}
 
       {visible.length === 0 ? (
         <p className="py-16 text-center text-body text-neutral-500">
@@ -219,7 +259,7 @@ export function ProjetosGrid({ items, categorias }: Props) {
             <ProjetoCard
               key={projeto.id}
               projeto={projeto}
-              categoriaLabel={categoriaTitulo.get(projeto.categoria) ?? projeto.categoria}
+              categoriaLabel={getSolucaoPathLabel(categorias, projeto.categoria)}
               onOpenGallery={() => {
                 setOpenProjeto(projeto);
                 setGalleryIndex(0);

@@ -11,7 +11,7 @@ import { Container } from "@/components/shared/Container";
 import { contactInfo } from "@/lib/constants";
 import { CONTENT_ICONS } from "@/lib/content/icon-map";
 import { resolveTopBar } from "@/lib/content/resolve-top-bar";
-import { buildSolucaoTree } from "@/lib/content/solucoes-tree";
+import { buildSolucaoTree, type SolucaoNode } from "@/lib/content/solucoes-tree";
 import type { HeaderContent, SolucoesContent } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +28,61 @@ function isSolucoesNav(href: string) {
 }
 
 const SERVICOS_PAGE_HREF = "/servicos";
+
+function ServicosNavBranch({
+  node,
+  depth,
+  onNavigate,
+  desktop,
+}: {
+  node: SolucaoNode;
+  depth: number;
+  onNavigate?: () => void;
+  desktop?: boolean;
+}) {
+  const Icon = CONTENT_ICONS[node.iconKey];
+  const pad = depth === 1 ? "" : depth === 2 ? (desktop ? "ml-6" : "ml-7") : desktop ? "ml-10" : "ml-11";
+
+  return (
+    <div className="flex flex-col">
+      <a
+        role={desktop ? "menuitem" : undefined}
+        href={`${SERVICOS_PAGE_HREF}#${node.id}`}
+        onClick={onNavigate}
+        className={cn(
+          desktop
+            ? depth === 1
+              ? "flex items-start gap-2.5 rounded-xl px-3 py-2.5 text-small font-medium text-neutral-700 transition-colors hover:bg-primary-50 hover:text-primary-700"
+              : "rounded-lg px-3 py-1.5 text-small text-neutral-500 transition-colors hover:bg-primary-50 hover:text-primary-700"
+            : depth === 1
+              ? "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-small text-neutral-700 hover:bg-neutral-50"
+              : "rounded-lg px-3 py-2 text-small text-neutral-500 hover:bg-neutral-50",
+          pad,
+        )}
+      >
+        {depth === 1 && (
+          <Icon
+            className={cn(
+              "shrink-0 text-primary-600",
+              desktop ? "mt-0.5 h-4 w-4" : "h-4 w-4",
+            )}
+            strokeWidth={1.75}
+          />
+        )}
+        {node.titulo}
+      </a>
+      {node.children.map((child) => (
+        <ServicosNavBranch
+          key={child.id}
+          node={child}
+          depth={depth + 1}
+          onNavigate={onNavigate}
+          desktop={desktop}
+        />
+      ))}
+    </div>
+  );
+}
 
 export function Header({ content, servicos = [], overHero = false }: Props) {
   const whatsapp = content.whatsapp ?? {
@@ -134,31 +189,14 @@ export function Header({ content, servicos = [], overHero = false }: Props) {
                     className="absolute left-1/2 top-full w-[560px] -translate-x-1/2 pt-3"
                   >
                     <div className="grid grid-cols-2 gap-1 rounded-2xl border border-neutral-100 bg-white p-3 shadow-xl shadow-primary-900/10">
-                      {servicosTree.map((svc) => {
-                        const Icon = CONTENT_ICONS[svc.iconKey];
-                        return (
-                          <div key={svc.id} className="flex flex-col">
-                            <a
-                              role="menuitem"
-                              href={`${SERVICOS_PAGE_HREF}#${svc.id}`}
-                              className="flex items-start gap-2.5 rounded-xl px-3 py-2.5 text-small font-medium text-neutral-700 transition-colors hover:bg-primary-50 hover:text-primary-700"
-                            >
-                              <Icon className="mt-0.5 h-4 w-4 shrink-0 text-primary-600" strokeWidth={1.75} />
-                              {svc.titulo}
-                            </a>
-                            {svc.children.map((child) => (
-                              <a
-                                key={child.id}
-                                role="menuitem"
-                                href={`${SERVICOS_PAGE_HREF}#${child.id}`}
-                                className="ml-6 rounded-lg px-3 py-1.5 text-small text-neutral-500 transition-colors hover:bg-primary-50 hover:text-primary-700"
-                              >
-                                {child.titulo}
-                              </a>
-                            ))}
-                          </div>
-                        );
-                      })}
+                      {servicosTree.map((svc) => (
+                        <ServicosNavBranch
+                          key={svc.id}
+                          node={svc}
+                          depth={1}
+                          desktop
+                        />
+                      ))}
                     </div>
                   </div>
                 )}
@@ -237,31 +275,14 @@ export function Header({ content, servicos = [], overHero = false }: Props) {
                     </span>
                   </a>
                   <div className="flex flex-col gap-0.5">
-                    {servicosTree.map((svc) => {
-                      const Icon = CONTENT_ICONS[svc.iconKey];
-                      return (
-                        <div key={svc.id}>
-                          <a
-                            href={`${SERVICOS_PAGE_HREF}#${svc.id}`}
-                            onClick={() => setMobileOpen(false)}
-                            className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-small text-neutral-700 hover:bg-neutral-50"
-                          >
-                            <Icon className="h-4 w-4 text-primary-600" strokeWidth={1.75} />
-                            {svc.titulo}
-                          </a>
-                          {svc.children.map((child) => (
-                            <a
-                              key={child.id}
-                              href={`${SERVICOS_PAGE_HREF}#${child.id}`}
-                              onClick={() => setMobileOpen(false)}
-                              className="ml-7 rounded-lg px-3 py-2 text-small text-neutral-500 hover:bg-neutral-50"
-                            >
-                              {child.titulo}
-                            </a>
-                          ))}
-                        </div>
-                      );
-                    })}
+                    {servicosTree.map((svc) => (
+                      <ServicosNavBranch
+                        key={svc.id}
+                        node={svc}
+                        depth={1}
+                        onNavigate={() => setMobileOpen(false)}
+                      />
+                    ))}
                   </div>
                 </div>
               ) : (
