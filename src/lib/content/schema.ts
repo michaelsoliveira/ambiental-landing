@@ -31,6 +31,8 @@ export const contentIconKeySchema = z.enum([
   "Plane",
   "Gauge",
   "Flame",
+  "ClipboardList",
+  "Trees",
 ]);
 
 /** @deprecated use contentIconKeySchema */
@@ -41,6 +43,7 @@ export const sectionKeySchema = z.enum([
   "provaSocial",
   "pilares",
   "solucoes",
+  "sistemas",
   "portalCliente",
   "segmentos",
   "diferenciais",
@@ -56,6 +59,7 @@ export const DEFAULT_SECTION_ORDER = [
   "provaSocial",
   "pilares",
   "solucoes",
+  "sistemas",
   "portalCliente",
   "segmentos",
   "diferenciais",
@@ -65,6 +69,13 @@ export const DEFAULT_SECTION_ORDER = [
   "faq",
   "ctaFinal",
 ] as const satisfies readonly z.infer<typeof sectionKeySchema>[];
+
+export const sistemaMockVariantSchema = z.enum([
+  "financeiro",
+  "condicionantes",
+  "sst",
+  "manejo",
+]);
 
 export const mediaFieldSchema = z.object({
   kind: mediaKindSchema.default("none"),
@@ -324,6 +335,27 @@ export const portalClienteContentSchema = z.object({
   items: z.array(portalBlocoSchema).min(1),
 });
 
+export const sistemaItemSchema = z.object({
+  id: z.string().min(1),
+  tone: pilarToneSchema,
+  iconKey: contentIconKeySchema,
+  titulo: z.string().min(1),
+  descricao: z.string().min(1),
+  bullets: z.array(z.string().min(1)).min(1),
+  ctaLabel: z.string().min(1),
+  href: z.string().min(1),
+  mockVariant: sistemaMockVariantSchema,
+});
+
+export const sistemasContentSchema = z.object({
+  eyebrow: z.string().min(1),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  portalHint: z.string().min(1),
+  portalHref: z.string().min(1),
+  items: z.array(sistemaItemSchema).min(1).max(6),
+});
+
 export const segmentoItemSchema = z.object({
   id: z.string().min(1),
   iconKey: contentIconKeySchema,
@@ -438,6 +470,7 @@ export const landingContentSchema = z.object({
   provaSocial: provaSocialContentSchema,
   pilares: pilaresContentSchema,
   solucoes: solucoesContentSchema,
+  sistemas: sistemasContentSchema,
   portalCliente: portalClienteContentSchema,
   segmentos: segmentosContentSchema,
   diferenciais: diferenciaisContentSchema,
@@ -466,6 +499,9 @@ export type FaqContent = z.infer<typeof faqContentSchema>;
 export type CtaFinalContent = z.infer<typeof ctaFinalContentSchema>;
 export type PilaresContent = z.infer<typeof pilaresContentSchema>;
 export type PortalClienteContent = z.infer<typeof portalClienteContentSchema>;
+export type SistemaItem = z.infer<typeof sistemaItemSchema>;
+export type SistemasContent = z.infer<typeof sistemasContentSchema>;
+export type SistemaMockVariant = z.infer<typeof sistemaMockVariantSchema>;
 export type SegmentosContent = z.infer<typeof segmentosContentSchema>;
 export type DiferenciaisContent = z.infer<typeof diferenciaisContentSchema>;
 export type AbrangenciaContent = z.infer<typeof abrangenciaContentSchema>;

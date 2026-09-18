@@ -13,6 +13,11 @@ import {
   isSanityConfigured,
 } from "@/lib/content/providers/sanity";
 import {
+  ensureCatalogNavItems,
+  mergeHeaderNav,
+  mergeLayoutSections,
+} from "@/lib/content/merge-catalog";
+import {
   abrangenciaContentSchema,
   comoFuncionaContentSchema,
   ctaFinalContentSchema,
@@ -30,10 +35,12 @@ import {
   provaSocialContentSchema,
   segmentosContentSchema,
   solucoesContentSchema,
+  sistemasContentSchema,
   type FooterContent,
   type HeaderContent,
   type HeroContent,
   type LandingContent,
+  type LayoutContent,
 } from "@/lib/content/schema";
 
 function resolveProvider(): "local" | "sanity" | "api" {
@@ -55,6 +62,7 @@ const SECTION_SCHEMAS: Record<string, z.ZodTypeAny> = {
   provaSocial: provaSocialContentSchema,
   pilares: pilaresContentSchema,
   solucoes: solucoesContentSchema,
+  sistemas: sistemasContentSchema,
   portalCliente: portalClienteContentSchema,
   segmentos: segmentosContentSchema,
   diferenciais: diferenciaisContentSchema,
@@ -91,6 +99,21 @@ function mergeWithLocalFallback(
     if (check.success) {
       if (key === "hero") {
         merged[key] = mergeHeroSection(check.data as HeroContent, local.hero);
+      } else if (key === "layout") {
+        merged[key] = mergeLayoutSections(
+          check.data as LayoutContent,
+          local.layout,
+        );
+      } else if (key === "header") {
+        merged[key] = mergeHeaderNav(
+          check.data as HeaderContent,
+          local.header,
+        );
+      } else if (key === "footer") {
+        merged[key] = ensureCatalogNavItems(
+          check.data as FooterContent,
+          local.footer,
+        );
       } else {
         merged[key] = check.data;
       }

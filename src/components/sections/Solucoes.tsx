@@ -34,7 +34,7 @@ export function Solucoes({ content }: Props) {
                     <Icon className="h-6 w-6 text-primary-700" strokeWidth={1.75} />
                   </span>
                   <h3 className="mt-5 text-h3 text-neutral-900">{solucao.titulo}</h3>
-                  <p className="mt-2 text-body text-neutral-500">{solucao.descricao}</p>
+                  <p className="mt-2 text-body text-justify text-neutral-500">{solucao.descricao}</p>
                   {solucao.children.length > 0 && (
                     <ul className="mt-4 space-y-1 border-t border-neutral-200/80 pt-3">
                       {solucao.children.map((child) => (

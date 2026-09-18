@@ -44,7 +44,7 @@ Pilares de mensagem:
 
 ### 4.1 Header
 
-- RF-01: Logo + navegação âncora (Soluções, Portal, Segmentos, Depoimentos, FAQ, Contato).
+- RF-01: Logo + navegação âncora (Soluções, Sistemas, Portal, Segmentos, Depoimentos, FAQ, Contato).
 - RF-02: Dois CTAs sempre visíveis — "Falar com um consultor" (verde) e "Acessar portal do cliente" (azul tech).
 - RF-03: Menu mobile (hambúrguer) com os mesmos itens + CTAs em destaque.
 - RF-04: Header com fundo transparente no topo, sólido com sombra sutil ao rolar (`scroll > 24px`).
@@ -92,6 +92,24 @@ Pilares de mensagem:
   real" (indicadores/sensores, alertas).
 - RF-24: CTA "Acessar portal do cliente" ao final da seção, mesma cor `tech-600`.
 - RF-25: Screenshot/mockup estático — nunca dado real de cliente.
+
+### 4.6.1 Sistemas SaaS (vitrine de produtos digitais)
+
+Seção `#sistemas` entre Soluções e Portal do Cliente. Apresenta os sistemas desenvolvidos pela Ambientais /
+equipe. O portal financeiro (`ambiental-system`) entra como card e a seção Portal do Cliente continua detalhando
+financeiro + monitoramento.
+
+- RF-25a: Quatro cards — (1) gestão financeira / portal do cliente (`ambiental-system`), (2) monitoramento de
+  condicionantes ambientais (`licencas`), (3) gestão em saúde e segurança do trabalho (`inexahub-sst`),
+  (4) auxílio ao manejo florestal (`manejo`).
+- RF-25b: Cada card com tom semântico (`primary` para financeiro/ambiental/manejo, `accent` para SST), bullets de
+  capacidade reais (sem overclaim), mock UI estático tipado e CTA próprio.
+- RF-25c: CTA por sistema via `NEXT_PUBLIC_SISTEMA_FINANCEIRO_URL` (fallback `NEXT_PUBLIC_PORTAL_URL`),
+  `NEXT_PUBLIC_SISTEMA_LICENCAS_URL`, `NEXT_PUBLIC_SISTEMA_SST_URL`, `NEXT_PUBLIC_SISTEMA_MANEJO_URL`.
+  Sem URL → `#contato` com label "Solicitar demonstração".
+- RF-25d: Faixa inferior apontando para `#portal-cliente` (detalhe financeiro/monitoramento), sem usar `tech-*`
+  nesta seção — `tech-*` permanece exclusivo do Portal.
+- RF-25e: Item de navegação "Sistemas" → `#sistemas`.
 
 ### 4.7 Segmentos / Indústrias Atendidas
 

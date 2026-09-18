@@ -31,6 +31,8 @@ Rodar após **cada seção** implementada (não acumular para o final — `SKILL
 
 - [ ] Nenhuma cor hex/rgb hardcoded em componentes — apenas classes Tailwind com os tokens de SDD-01
 - [ ] Cor `tech-*` aparece **apenas** na seção/CTA do Portal do Cliente
+- [ ] Seção `#sistemas` usa `primary`/`accent` (não `tech-*`) e lista os quatro produtos SaaS (financeiro, licenças, SST, manejo)
+- [ ] CTAs de sistemas sem env apontam para `#contato`
 - [ ] Cor `accent-*` usada só pontualmente (badges/ícones do pilar SST), nunca em grandes áreas
 - [ ] Tipografia usa a escala de SDD-01 §3 (sem `text-[18px]` arbitrário)
 - [ ] Espaçamento de seção segue `py-16 lg:py-28` (ou `py-32` nas seções de destaque)
@@ -46,7 +48,7 @@ Rodar após **cada seção** implementada (não acumular para o final — `SKILL
 ## 5. Checklist manual — Conversão e navegação (CA-03)
 
 - [ ] Header sempre mostra os dois CTAs (comercial verde + portal azul tech), inclusive no menu mobile
-- [ ] Todas as âncoras de navegação (`#pilares`, `#solucoes`, `#portal-cliente`, ...) resolvem para a seção correta
+- [ ] Todas as âncoras de navegação (`#pilares`, `#solucoes`, `#sistemas`, `#portal-cliente`, ...) resolvem para a seção correta
 - [ ] Formulário de contato valida campos obrigatórios (client-side, `zod`) e mostra estado de sucesso/erro sem `alert()`
 - [ ] CTA "Acessar portal do cliente" aponta para `NEXT_PUBLIC_PORTAL_URL` (não para âncora interna)
 

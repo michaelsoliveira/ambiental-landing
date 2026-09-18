@@ -70,16 +70,17 @@ Ordem obrigatória das seções (refletir em `src/app/page.tsx` — ver SDD-02 �
 5. **Soluções e Serviços** — bento grid com o catálogo real de 9 especialidades da empresa: Segurança do
    Trabalho, Meio Ambiente, Aerolevantamento, Sismografia, Hidrossemeadura, Logística, Instrumentação para
    Monitoramento, Combate a Incêndio e Pânico, Mineração e Geotécnica
-6. **Portal do Cliente** — vitrine do `ambiental-system` (financeiro + monitoramento em tempo real) — ver
+6. **Sistemas** — vitrine dos SaaS (financeiro/portal, condicionantes/licenças, SST, manejo florestal) — âncora `#sistemas`
+7. **Portal do Cliente** — vitrine do `ambiental-system` (financeiro + monitoramento em tempo real) — ver
    `specs/sdd/03-integracao-portal-cliente.md` antes de escrever copy desta seção
-7. **Segmentos/Indústrias Atendidas** — indústria, agronegócio, construção civil, logística, etc.
-8. **Diferenciais** — equipe técnica multidisciplinar, tecnologia própria, compliance sempre atualizado
-9. **Depoimentos/Cases**
-10. **Abrangência** — mapa/lista de regiões atendidas
-11. **Como Funciona** — contratação de consultoria vs. assinatura do portal
-12. **FAQ**
-13. **CTA Final + Formulário de Contato**
-14. **Footer**
+8. **Segmentos/Indústrias Atendidas** — indústria, agronegócio, construção civil, logística, etc.
+9. **Diferenciais** — equipe técnica multidisciplinar, tecnologia própria, compliance sempre atualizado
+10. **Depoimentos/Cases**
+11. **Abrangência** — mapa/lista de regiões atendidas
+12. **Como Funciona** — contratação de consultoria vs. assinatura do portal
+13. **FAQ**
+14. **CTA Final + Formulário de Contato**
+15. **Footer**
 
 Especificação funcional completa (requisitos por seção, copy, RF-XX): **`specs/SPEC_MODULO_LANDING_AMBIENTAL.md`**.
 

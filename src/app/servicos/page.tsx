@@ -27,7 +27,7 @@ export default async function ServicosPage() {
               O que fazemos
             </p>
             <h1 className="mt-3 text-h1 text-white">Nossos Serviços</h1>
-            <p className="mt-4 max-w-2xl text-body-lg text-neutral-300">
+            <p className="mt-4 max-w-2xl text-body-lg text-justify text-neutral-300">
               Consultoria técnica completa em segurança do trabalho, meio ambiente e
               engenharia, adaptada à realidade da sua operação.
             </p>

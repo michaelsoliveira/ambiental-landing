@@ -41,6 +41,7 @@ export async function fetchSanityLandingContent(opts?: {
       provaSocial,
       pilares,
       solucoes,
+      sistemas,
       portalCliente,
       segmentos,
       diferenciais,
@@ -107,6 +108,10 @@ export async function fetchSanityLandingContent(opts?: {
         eyebrow, title,
         items[]{ id, iconKey, titulo, descricao, colSpan, servicoParam, parentId }
       }`),
+      client.fetch(`*[_type == "landingSistemas"][0]{
+        eyebrow, title, description, portalHint, portalHref,
+        items[]{ id, tone, iconKey, titulo, descricao, bullets, ctaLabel, href, mockVariant }
+      }`),
       client.fetch(`*[_type == "landingPortalCliente"][0]{
         eyebrow, title, description, ctaLabel, portalUrl,
         items[]{ id, iconKey, titulo, descricao, bullets, colSpan }
@@ -150,6 +155,7 @@ export async function fetchSanityLandingContent(opts?: {
         provaSocial,
         pilares,
         solucoes,
+        sistemas,
         portalCliente,
         segmentos,
         diferenciais,

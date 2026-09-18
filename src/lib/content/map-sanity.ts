@@ -1,9 +1,16 @@
 import { getLocalLandingContent } from "@/lib/content/providers/local";
+import {
+  ensureCatalogNavItems,
+  mergeHeaderNav,
+  mergeLayoutSections,
+} from "@/lib/content/merge-catalog";
 import { withResolvedHeaderTopBar } from "@/lib/content/resolve-top-bar";
 import {
   landingContentSchema,
+  type FooterContent,
   type HeaderContent,
   type LandingContent,
+  type LayoutContent,
   type SectionKey,
 } from "@/lib/content/schema";
 
@@ -15,6 +22,7 @@ export type SanityLandingPartials = {
   provaSocial?: Record<string, unknown> | null;
   pilares?: Record<string, unknown> | null;
   solucoes?: Record<string, unknown> | null;
+  sistemas?: Record<string, unknown> | null;
   portalCliente?: Record<string, unknown> | null;
   segmentos?: Record<string, unknown> | null;
   diferenciais?: Record<string, unknown> | null;
@@ -33,6 +41,7 @@ const SECTION_KEYS = [
   "provaSocial",
   "pilares",
   "solucoes",
+  "sistemas",
   "portalCliente",
   "segmentos",
   "diferenciais",
@@ -65,8 +74,25 @@ export function mergeSanityPartials(
     const shape = landingContentSchema.shape[key];
     const parsed = shape.safeParse(raw);
     if (parsed.success) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (next as any)[key] = parsed.data;
+      if (key === "layout") {
+        next.layout = mergeLayoutSections(
+          parsed.data as LayoutContent,
+          base.layout,
+        );
+      } else if (key === "header") {
+        next.header = mergeHeaderNav(
+          parsed.data as HeaderContent,
+          base.header,
+        );
+      } else if (key === "footer") {
+        next.footer = ensureCatalogNavItems(
+          parsed.data as FooterContent,
+          base.footer,
+        );
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (next as any)[key] = parsed.data;
+      }
       usedRemote = true;
     }
   }

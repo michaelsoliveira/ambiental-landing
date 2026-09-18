@@ -58,6 +58,20 @@ NEXT_PUBLIC_PORTAL_URL=https://portal.ambientalconsultoria.com.br
 Botão "Acessar portal do cliente" é um `<a>` simples para `process.env.NEXT_PUBLIC_PORTAL_URL`, `target="_self"`
 (não abrir em nova aba — é uma troca de produto, não conteúdo complementar).
 
+### 4.1 Sistemas SaaS (seção `#sistemas`)
+
+A landing vitrine quatro sistemas desenvolvidos pela equipe:
+
+| Produto | Env | Fallback |
+|---------|-----|----------|
+| Financeiro / portal (`ambiental-system`) | `NEXT_PUBLIC_SISTEMA_FINANCEIRO_URL` (default: `NEXT_PUBLIC_PORTAL_URL`) | `#contato` |
+| Condicionantes / licenças | `NEXT_PUBLIC_SISTEMA_LICENCAS_URL` | `#contato` |
+| SST (`inexahub-sst`) | `NEXT_PUBLIC_SISTEMA_SST_URL` | `#contato` |
+| Manejo florestal | `NEXT_PUBLIC_SISTEMA_MANEJO_URL` | `#contato` |
+
+Esses CTAs **não** usam a paleta `tech-*` (reservada à seção Portal do Cliente). Ver RF-25a–e em
+`SPEC_MODULO_LANDING_AMBIENTAL.md`.
+
 ---
 
 ## 5. Consistência de marca entre landing e portal

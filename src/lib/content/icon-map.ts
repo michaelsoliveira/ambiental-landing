@@ -5,6 +5,7 @@ import {
   BarChart3,
   Building2,
   ClipboardCheck,
+  ClipboardList,
   Clock,
   Factory,
   FileCheck2,
@@ -21,6 +22,7 @@ import {
   ShieldCheck,
   Siren,
   Sprout,
+  Trees,
   Truck,
   Users,
   Zap,
@@ -53,6 +55,8 @@ export const CONTENT_ICONS: Record<ContentIconKey, LucideIcon> = {
   Plane,
   Gauge,
   Flame,
+  ClipboardList,
+  Trees,
 };
 
 /** @deprecated use CONTENT_ICONS */

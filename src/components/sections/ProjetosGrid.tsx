@@ -149,7 +149,10 @@ function ProjetoCard({
       <button
         type="button"
         onClick={cover ? onOpenGallery : undefined}
-        className={cn("relative block h-44 w-full bg-neutral-50", cover && "cursor-zoom-in")}
+        className={cn(
+          "relative block aspect-square w-full bg-neutral-50",
+          cover && "cursor-zoom-in",
+        )}
         aria-label={cover ? `Ver galeria de ${projeto.titulo}` : undefined}
         disabled={!cover}
       >
@@ -179,7 +182,7 @@ function ProjetoCard({
       <div className="p-5">
         <p className="text-micro font-semibold uppercase text-primary-700">{categoriaLabel}</p>
         <h3 className="mt-2 text-h3 text-neutral-900">{projeto.titulo}</h3>
-        <p className="mt-2 text-small text-neutral-500">{projeto.descricao}</p>
+        <p className="mt-2 text-small text-justify text-neutral-500">{projeto.descricao}</p>
       </div>
     </div>
   );

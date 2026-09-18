@@ -142,6 +142,7 @@ type LandingContent = {
 | `faq` | **P1** ✅ | `Faq` |
 | `cta_final` | **P1** ✅ | `CtaFinal` |
 | `pilares` | **P2** ✅ | `Pilares` |
+| `sistemas` | **P2** ✅ | `Sistemas` |
 | `portal_cliente` | **P2** ✅ | `PortalCliente` |
 | `segmentos` | **P2** ✅ | `Segmentos` |
 | `diferenciais` | **P2** ✅ | `Diferenciais` |

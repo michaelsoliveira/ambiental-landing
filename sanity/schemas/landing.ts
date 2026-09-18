@@ -4,7 +4,7 @@
  * Singletons:
  * - landingHero, landingDepoimentos (P0)
  * - landingProvaSocial, landingSolucoes, landingFaq, landingCtaFinal (P1)
- * - landingPilares, landingPortalCliente, landingSegmentos, landingDiferenciais,
+ * - landingPilares, landingPortalCliente, landingSistemas, landingSegmentos, landingDiferenciais,
  *   landingAbrangencia, landingComoFunciona, landingHeader, landingFooter,
  *   landingLayout (P2)
  * - landingProjetos — página /projetos, upload de imagem por item (P3)
@@ -47,6 +47,8 @@ const ICON_KEYS = [
   "Plane",
   "Gauge",
   "Flame",
+  "ClipboardList",
+  "Trees",
 ];
 
 const SECTION_KEYS = [
@@ -54,6 +56,7 @@ const SECTION_KEYS = [
   "provaSocial",
   "pilares",
   "solucoes",
+  "sistemas",
   "portalCliente",
   "segmentos",
   "diferenciais",
@@ -395,6 +398,47 @@ export const landingPortalCliente = {
             { name: "descricao", type: "text" },
             { name: "bullets", type: "array", of: [{ type: "string" }] },
             { name: "colSpan", type: "string" },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+export const landingSistemas = {
+  name: "landingSistemas",
+  title: "Landing — Sistemas SaaS",
+  type: "document",
+  fields: [
+    { name: "eyebrow", type: "string" },
+    { name: "title", type: "string" },
+    { name: "description", type: "text" },
+    { name: "portalHint", type: "text" },
+    { name: "portalHref", type: "string" },
+    {
+      name: "items",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            { name: "id", type: "string" },
+            {
+              name: "tone",
+              type: "string",
+              options: { list: ["primary", "accent"] },
+            },
+            { name: "iconKey", type: "string", options: { list: ICON_KEYS } },
+            { name: "titulo", type: "string" },
+            { name: "descricao", type: "text" },
+            { name: "bullets", type: "array", of: [{ type: "string" }] },
+            { name: "ctaLabel", type: "string" },
+            { name: "href", type: "string" },
+            {
+              name: "mockVariant",
+              type: "string",
+              options: { list: ["financeiro", "condicionantes", "sst", "manejo"] },
+            },
           ],
         },
       ],

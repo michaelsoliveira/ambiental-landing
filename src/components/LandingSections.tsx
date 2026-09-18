@@ -9,6 +9,7 @@ import { Pilares } from "@/components/sections/Pilares";
 import { PortalCliente } from "@/components/sections/PortalCliente";
 import { ProvaSocial } from "@/components/sections/ProvaSocial";
 import { Segmentos } from "@/components/sections/Segmentos";
+import { Sistemas } from "@/components/sections/Sistemas";
 import { Solucoes } from "@/components/sections/Solucoes";
 import { resolveVisibleSectionKeys } from "@/lib/content/map-sanity";
 import type { LandingContent, SectionKey } from "@/lib/content/types";
@@ -27,6 +28,8 @@ function renderSection(key: SectionKey, content: LandingContent) {
       return <Pilares key={key} content={content.pilares} />;
     case "solucoes":
       return <Solucoes key={key} content={content.solucoes} />;
+    case "sistemas":
+      return <Sistemas key={key} content={content.sistemas} />;
     case "portalCliente":
       return <PortalCliente key={key} content={content.portalCliente} />;
     case "segmentos":

@@ -69,11 +69,18 @@ export const socialLinksData = [
   },
 ];
 
-export const navItems: NavItem[] = [
+/** Navbar principal — enxuta; CTAs cobrem Contato. */
+export const headerNavItems: NavItem[] = [
   { label: "Início", href: "#top" },
   { label: "Soluções", href: "/servicos" },
+  { label: "Sistemas", href: "#sistemas" },
   { label: "Projetos", href: "/projetos" },
   { label: "Segmentos", href: "#segmentos" },
+];
+
+/** Footer / sitemap — inclui âncoras omitidas do navbar. */
+export const navItems: NavItem[] = [
+  ...headerNavItems,
   { label: "Depoimentos", href: "#depoimentos" },
   { label: "FAQ", href: "#faq" },
   { label: "Contato", href: "#contato" },
@@ -263,6 +270,74 @@ export const portalBlocos: PortalBloco[] = [
       "Histórico pronto para auditoria e fiscalização",
     ],
     colSpan: "lg:col-span-6",
+  },
+];
+
+/** Vitrine dos sistemas SaaS (financeiro/portal, licenças, SST, manejo). */
+export const sistemasItems = [
+  {
+    id: "financeiro",
+    tone: "primary" as const,
+    iconKey: "BarChart3" as const,
+    titulo: "Gestão financeira e portal do cliente",
+    descricao:
+      "Portal financeiro para cobranças, contratos, notas e acompanhamento da operação — o mesmo sistema usado na entrega da consultoria.",
+    bullets: [
+      "Cobranças, contratos e notas em um só lugar",
+      "Acesso do cliente sem depender de e-mail ou planilha",
+      "Visão consolidada por unidade ou contrato",
+      "Base para monitoramento e conformidade contínua",
+    ],
+    mockVariant: "financeiro" as const,
+    accessLabel: "Acessar portal financeiro",
+  },
+  {
+    id: "licencas",
+    tone: "primary" as const,
+    iconKey: "ClipboardList" as const,
+    titulo: "Monitoramento de condicionantes ambientais",
+    descricao:
+      "Acompanhe prazos, evidências e status das condicionantes vinculadas às licenças — com agenda, kanban e histórico auditável.",
+    bullets: [
+      "Licenças e condicionantes por empreendimento",
+      "Prazos, tarefas e evidências centralizados",
+      "Visão operacional em lista, kanban e agenda",
+      "Rastreabilidade para auditoria e órgãos ambientais",
+    ],
+    mockVariant: "condicionantes" as const,
+    accessLabel: "Acessar sistema de licenças",
+  },
+  {
+    id: "sst",
+    tone: "accent" as const,
+    iconKey: "ShieldCheck" as const,
+    titulo: "Gestão em saúde e segurança do trabalho",
+    descricao:
+      "Plataforma para Medicina e Segurança do Trabalho: exames ocupacionais, ASO, PCMSO, PGR e conformidade com as NRs.",
+    bullets: [
+      "Empresas, trabalhadores e exames ocupacionais",
+      "ASO, PCMSO e gestão documental SST",
+      "PGR e inventário de riscos (NR-1)",
+      "Painel administrativo com governança de conteúdo",
+    ],
+    mockVariant: "sst" as const,
+    accessLabel: "Acessar sistema SST",
+  },
+  {
+    id: "manejo",
+    tone: "primary" as const,
+    iconKey: "Trees" as const,
+    titulo: "Auxílio ao manejo florestal",
+    descricao:
+      "Ferramenta de apoio ao planejamento e acompanhamento de operações de manejo florestal, com foco em organização e conformidade.",
+    bullets: [
+      "Organização de operações e atividades de campo",
+      "Acompanhamento de etapas do manejo",
+      "Registros e evidências por área/atividade",
+      "Visão consolidada para equipe técnica",
+    ],
+    mockVariant: "manejo" as const,
+    accessLabel: "Acessar sistema de manejo",
   },
 ];
 

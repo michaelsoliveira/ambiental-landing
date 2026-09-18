@@ -84,6 +84,7 @@ export default function Home() {
       <ProvaSocial />
       <Pilares />
       <Solucoes />
+      <Sistemas />
       <PortalCliente />
       <Segmentos />
       <Diferenciais />
@@ -98,8 +99,9 @@ export default function Home() {
 }
 ```
 
-A ordem das seções segue `SPEC_MODULO_LANDING_AMBIENTAL.md §4` — qualquer reordenação deve ser refletida nos dois
-arquivos (spec funcional e `page.tsx`) na mesma alteração.
+A ordem das seções segue `SPEC_MODULO_LANDING_AMBIENTAL.md §4` e o catálogo
+`DEFAULT_SECTION_ORDER` / `content.layout` (runtime via `LandingSections`) — qualquer reordenação deve
+ser refletida na spec e no schema na mesma alteração.
 
 ---
 

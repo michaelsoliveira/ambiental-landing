@@ -84,7 +84,7 @@ function ServicoCard({
         >
           {svc.titulo}
         </h2>
-        <p className="mt-3 text-body text-neutral-500">
+        <p className="mt-3 text-body text-justify text-neutral-500">
           {svc.descricaoLonga || svc.descricao}
         </p>
         <div className="mt-6 flex flex-wrap gap-3">

@@ -36,7 +36,7 @@ export default async function ProjetosPage() {
               {projetos.eyebrow}
             </p>
             <h1 className="mt-3 text-h1 text-white">{projetos.title}</h1>
-            <p className="mt-4 max-w-2xl text-body-lg text-neutral-300">
+            <p className="mt-4 max-w-2xl text-body-lg text-justify text-neutral-300">
               {projetos.description}
             </p>
           </div>

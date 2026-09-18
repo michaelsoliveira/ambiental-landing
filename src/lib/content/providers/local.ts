@@ -4,6 +4,7 @@ import {
   diferenciais,
   faqItems,
   metricasProvaSocial,
+  headerNavItems,
   navItems,
   passosComoFunciona,
   pilares,
@@ -12,9 +13,18 @@ import {
   projetos,
   regioesAtendidas,
   segmentos,
+  sistemasItems,
   socialLinksData,
   solucoes,
 } from "@/lib/constants";
+import {
+  resolveSistemaCtaLabel,
+  resolveSistemaHref,
+  sistemaFinanceiroUrl,
+  sistemaLicencasUrl,
+  sistemaManejoUrl,
+  sistemaSstUrl,
+} from "@/lib/site";
 import {
   DEFAULT_SECTION_ORDER,
   type ContentIconKey,
@@ -42,6 +52,13 @@ const PILAR_ICON_BY_ID: Record<string, ContentIconKey> = {
 const PORTAL_ICON_BY_ID: Record<string, ContentIconKey> = {
   financeiro: "BarChart3",
   monitoramento: "Activity",
+};
+
+const SISTEMA_URL_BY_ID: Record<string, string | undefined> = {
+  financeiro: sistemaFinanceiroUrl,
+  licencas: sistemaLicencasUrl,
+  sst: sistemaSstUrl,
+  manejo: sistemaManejoUrl,
 };
 
 const SEGMENTO_ICON_BY_ID: Record<string, ContentIconKey> = {
@@ -88,7 +105,7 @@ export function getLocalLandingContent(): LandingContent {
     },
     header: {
       brandName: "Ambiental Consultoria",
-      navItems: navItems.map((n) => ({ label: n.label, href: n.href })),
+      navItems: headerNavItems.map((n) => ({ label: n.label, href: n.href })),
       primaryCta: {
         label: "Solicitar Orçamento",
         href: "#contato",
@@ -238,6 +255,29 @@ export function getLocalLandingContent(): LandingContent {
         parentId: s.parentId,
         imagem: s.imagem,
       })),
+    },
+    sistemas: {
+      eyebrow: "Sistemas",
+      title: "Plataformas digitais para conformidade e operação",
+      description:
+        "Além da consultoria, desenvolvemos sistemas para gestão financeira e portal do cliente, condicionantes ambientais, saúde e segurança do trabalho e apoio ao manejo florestal.",
+      portalHint:
+        "O portal financeiro também é detalhado na seção Portal do Cliente, com monitoramento em tempo real.",
+      portalHref: "#portal-cliente",
+      items: sistemasItems.map((item) => {
+        const href = resolveSistemaHref(SISTEMA_URL_BY_ID[item.id]);
+        return {
+          id: item.id,
+          tone: item.tone,
+          iconKey: item.iconKey,
+          titulo: item.titulo,
+          descricao: item.descricao,
+          bullets: item.bullets,
+          mockVariant: item.mockVariant,
+          href,
+          ctaLabel: resolveSistemaCtaLabel(href, item.accessLabel),
+        };
+      }),
     },
     portalCliente: {
       eyebrow: "Portal do cliente",
