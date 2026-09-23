@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://portal.bomanejo.com.br}
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://ambientalconsul.com.br}
         NEXT_PUBLIC_PORTAL_URL: ${NEXT_PUBLIC_PORTAL_URL:-https://financeiro.bomanejo.com.br}
         NEXT_PUBLIC_CMS_API_URL: ${NEXT_PUBLIC_CMS_API_URL:-}
     container_name: ambiental_landing

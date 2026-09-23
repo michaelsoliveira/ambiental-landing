@@ -1,7 +1,7 @@
 /** URL pública da landing (canonical, sitemap, OpenGraph). */
 export const siteUrl =
   process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ??
-  "https://portal.bomanejo.com.br";
+  "https://ambientalconsul.com.br";
 
 /**
  * Login do portal autenticado (`ambiental-system` / financeiro).

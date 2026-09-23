@@ -8,7 +8,7 @@ RUN npm ci
 COPY . .
 RUN mkdir -p public
 
-ARG NEXT_PUBLIC_APP_URL=https://portal.bomanejo.com.br
+ARG NEXT_PUBLIC_APP_URL=https://ambientalconsul.com.br
 ARG NEXT_PUBLIC_PORTAL_URL=https://financeiro.bomanejo.com.br
 ARG NEXT_PUBLIC_CMS_API_URL
 ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
