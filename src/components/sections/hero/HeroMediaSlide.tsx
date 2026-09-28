@@ -1,3 +1,4 @@
+import { CmsImage } from "@/components/shared/CmsImage";
 import { cn } from "@/lib/utils";
 import type { HeroSlide, MediaField } from "@/lib/content/types";
 
@@ -49,13 +50,15 @@ export function HeroMediaSlide({ media, slideIndex, active, priority }: Props) {
   if (media.kind === "image" && media.src) {
     return (
       <MediaFrame>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <CmsImage
           src={media.src}
           alt={media.alt || ""}
-          className="h-full w-full object-cover object-center"
-          fetchPriority={priority ? "high" : undefined}
-          decoding="async"
+          fill
+          sizes="100vw"
+          quality={80}
+          priority={priority}
+          objectFit="cover"
+          imageClassName="object-center"
         />
       </MediaFrame>
     );

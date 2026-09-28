@@ -1,10 +1,12 @@
 "use client";
 
-import { ImageIcon, MessageCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChevronDown, ImageIcon, MessageCircle } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
+import { CmsImage } from "@/components/shared/CmsImage";
 import { Button } from "@/components/ui/button";
 import { contactInfo } from "@/lib/constants";
+import { cmsThumbSrc } from "@/lib/content/cms-image";
 import { CONTENT_ICONS } from "@/lib/content/icon-map";
 import {
   buildSolucaoTree,
@@ -15,6 +17,8 @@ import {
 } from "@/lib/content/solucoes-tree";
 import type { SolucoesContent } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
+
+const ROOTS_PAGE_SIZE = 3;
 
 type Props = {
   items: SolucoesContent["items"];
@@ -49,10 +53,12 @@ function ServicoCard({
   svc,
   invertido,
   depth = 1,
+  priority,
 }: {
   svc: SolucaoItem;
   invertido?: boolean;
   depth?: number;
+  priority?: boolean;
 }) {
   const Icon = CONTENT_ICONS[svc.iconKey];
   const nested = depth > 1;
@@ -115,11 +121,14 @@ function ServicoCard({
         )}
       >
         {svc.imagem?.url ? (
-          // eslint-disable-next-line @next/next/no-img-element -- mídia do CMS (MinIO), sem next/image
-          <img
-            src={svc.imagem.url}
+          <CmsImage
+            src={cmsThumbSrc(svc.imagem)}
             alt={svc.imagem.alt || svc.titulo}
-            className="absolute inset-0 h-full w-full object-cover"
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            quality={depth > 1 ? 55 : 65}
+            priority={priority}
+            objectFit="cover"
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-2 text-neutral-300">
@@ -138,30 +147,65 @@ function ServicoBranch({
   node,
   depth,
   invertRoot,
+  priority,
+  /** No modo “Todos”, filhos começam recolhidos para adiar download de imagens. */
+  collapseChildrenByDefault,
 }: {
   node: SolucaoNode;
   depth: number;
   invertRoot?: boolean;
+  priority?: boolean;
+  collapseChildrenByDefault?: boolean;
 }) {
+  const [expanded, setExpanded] = useState(!collapseChildrenByDefault);
+  const childCount = node.children.length;
+
   return (
     <div className="flex flex-col gap-3">
-      <ServicoCard svc={node} invertido={invertRoot} depth={depth} />
-      {node.children.length > 0 && (
-        <div
-          className={cn(
-            "flex flex-col gap-3 border-l-2 pl-4 lg:pl-6",
-            depth === 1 ? "border-primary-200" : "border-primary-100",
+      <ServicoCard
+        svc={node}
+        invertido={invertRoot}
+        depth={depth}
+        priority={priority}
+      />
+      {childCount > 0 && (
+        <>
+          {collapseChildrenByDefault && !expanded ? (
+            <button
+              type="button"
+              onClick={() => setExpanded(true)}
+              className={cn(
+                "flex items-center gap-2 self-start rounded-full border border-primary-200 bg-primary-50/60 px-4 py-2 text-small font-semibold text-primary-800 transition hover:bg-primary-50",
+                depth === 1 && "ml-0 lg:ml-0",
+              )}
+            >
+              <ChevronDown className="h-4 w-4" strokeWidth={2} />
+              Ver {childCount} especialidade{childCount === 1 ? "" : "s"} em{" "}
+              {node.titulo}
+            </button>
+          ) : (
+            <div
+              className={cn(
+                "flex flex-col gap-3 border-l-2 pl-4 lg:pl-6",
+                depth === 1 ? "border-primary-200" : "border-primary-100",
+              )}
+            >
+              <p className="text-micro font-semibold uppercase tracking-wide text-primary-700">
+                {depth === 1
+                  ? `Especialidades em ${node.titulo}`
+                  : `Em ${node.titulo}`}
+              </p>
+              {node.children.map((child) => (
+                <ServicoBranch
+                  key={child.id}
+                  node={child}
+                  depth={depth + 1}
+                  collapseChildrenByDefault={collapseChildrenByDefault}
+                />
+              ))}
+            </div>
           )}
-        >
-          <p className="text-micro font-semibold uppercase tracking-wide text-primary-700">
-            {depth === 1
-              ? `Especialidades em ${node.titulo}`
-              : `Em ${node.titulo}`}
-          </p>
-          {node.children.map((child) => (
-            <ServicoBranch key={child.id} node={child} depth={depth + 1} />
-          ))}
-        </div>
+        </>
       )}
     </div>
   );
@@ -169,7 +213,8 @@ function ServicoBranch({
 
 export function ServicosDetail({ items }: Props) {
   const [filter, setFilter] = useState<string>("all");
-  const roots = getRootSolucoes(items);
+  const [rootsVisible, setRootsVisible] = useState(ROOTS_PAGE_SIZE);
+  const roots = useMemo(() => getRootSolucoes(items), [items]);
 
   useEffect(() => {
     const syncHash = () => {
@@ -181,18 +226,26 @@ export function ServicosDetail({ items }: Props) {
     return () => window.removeEventListener("hashchange", syncHash);
   }, [items]);
 
+  useEffect(() => {
+    setRootsVisible(ROOTS_PAGE_SIZE);
+  }, [filter]);
+
   const activeRootId =
     filter === "all"
       ? null
       : (resolveSolucaoGroup(items, filter)?.root.id ?? filter);
 
-  const groups: SolucaoNode[] =
+  const allGroups: SolucaoNode[] =
     filter === "all"
       ? buildSolucaoTree(items)
       : (() => {
           const group = resolveSolucaoGroup(items, filter);
           return group ? [group.tree] : [];
         })();
+
+  const showingAll = filter === "all";
+  const groups = showingAll ? allGroups.slice(0, rootsVisible) : allGroups;
+  const hasMoreRoots = showingAll && rootsVisible < allGroups.length;
 
   return (
     <>
@@ -229,8 +282,25 @@ export function ServicosDetail({ items }: Props) {
             node={group}
             depth={1}
             invertRoot={index % 2 === 1}
+            priority={index === 0}
+            collapseChildrenByDefault={showingAll}
           />
         ))}
+
+        {hasMoreRoots && (
+          <div className="flex flex-col items-center gap-3 pb-4">
+            <p className="text-small text-neutral-500">
+              Mostrando {groups.length} de {allGroups.length} áreas de atuação
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setRootsVisible((n) => n + ROOTS_PAGE_SIZE)}
+            >
+              Carregar mais serviços
+            </Button>
+          </div>
+        )}
       </section>
     </>
   );

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Building2, ChevronLeft, ChevronRight } from "lucide-react";
 
+import { CmsImage } from "@/components/shared/CmsImage";
 import type { CarouselConfig, LogoCliente } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
 
@@ -27,11 +28,16 @@ function LogoCard({ logo }: { logo: LogoCliente }) {
   return (
     <div className="flex h-[3.25rem] items-center justify-center rounded-lg border border-neutral-100 bg-neutral-50 px-4 py-2.5">
       {logo.imageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <CmsImage
           src={logo.imageUrl}
           alt={logo.nome}
-          className="max-h-6 w-auto max-w-[7rem] object-contain"
+          width={112}
+          height={24}
+          sizes="112px"
+          quality={70}
+          objectFit="contain"
+          className="h-6 max-w-[7rem]"
+          imageClassName="h-6 w-auto max-w-[7rem]"
         />
       ) : (
         <div className="flex items-center gap-2">

@@ -2,7 +2,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 /**
- * Invalida cache da home após publish no ambiental-system.
+ * Invalida cache da landing após publish no ambiental-system.
  * Uso: POST /api/revalidate?secret=PREVIEW_SECRET
  * Body opcional: { "path": "/" }
  */
@@ -26,8 +26,16 @@ export async function POST(request: Request) {
   revalidatePath(path);
   revalidatePath("/");
   revalidatePath("/", "layout");
+  revalidatePath("/servicos");
+  revalidatePath("/projetos");
 
-  return NextResponse.json({ ok: true, revalidated: true, path, now: Date.now() });
+  return NextResponse.json({
+    ok: true,
+    revalidated: true,
+    path,
+    also: ["/servicos", "/projetos"],
+    now: Date.now(),
+  });
 }
 
 export async function GET(request: Request) {

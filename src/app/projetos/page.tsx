@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     "Uma amostra dos trabalhos técnicos que a Ambiental Consultoria já entregou para clientes no Amapá e no Brasil.",
 };
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+/** ISR curto — CMS muda pouco; imagens já têm cache próprio no otimizador. */
+export const revalidate = 120;
 
 export default async function ProjetosPage() {
   const content = await getLandingContent();

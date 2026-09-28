@@ -4,9 +4,11 @@ import { Footer } from "@/components/shared/Footer";
 import { Header } from "@/components/shared/Header";
 import { getLandingContent } from "@/lib/content/get-landing-content";
 
-/** Conteúdo vem do CMS — nunca servir HTML estático antigo. */
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+/**
+ * ISR curto — publish no CMS chama /api/revalidate.
+ * Preview (draftMode) continua fresco via getLandingContent.
+ */
+export const revalidate = 120;
 
 export default async function Home() {
   const content = await getLandingContent();

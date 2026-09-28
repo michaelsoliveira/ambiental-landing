@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     "Consultoria técnica completa em segurança do trabalho, meio ambiente e engenharia, adaptada à realidade da sua operação.",
 };
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+/** ISR curto — CMS muda pouco; imagens já têm cache próprio no otimizador. */
+export const revalidate = 120;
 
 export default async function ServicosPage() {
   const content = await getLandingContent();

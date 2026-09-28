@@ -1,8 +1,11 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, ImageIcon, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
+import { CmsImage } from "@/components/shared/CmsImage";
+import { Button } from "@/components/ui/button";
+import { cmsFullSrc, cmsThumbSrc } from "@/lib/content/cms-image";
 import type { ProjetosContent, SolucoesContent } from "@/lib/content/types";
 import {
   flattenSolucaoTree,
@@ -11,6 +14,8 @@ import {
   getSolucaoPathLabel,
 } from "@/lib/content/solucoes-tree";
 import { cn } from "@/lib/utils";
+
+const PAGE_SIZE = 9;
 
 type Props = {
   items: ProjetosContent["items"];
@@ -57,6 +62,22 @@ function GalleryLightbox({
 }) {
   const imagens = projeto.imagens;
   const atual = imagens[index];
+
+  // Prefetch vizinhos no lightbox (só 1 atrás / 1 à frente).
+  const prefetchUrls = useMemo(() => {
+    if (imagens.length < 2) return [] as string[];
+    const prev = imagens[(index - 1 + imagens.length) % imagens.length]?.url;
+    const next = imagens[(index + 1) % imagens.length]?.url;
+    return [prev, next].filter(Boolean) as string[];
+  }, [imagens, index]);
+
+  useEffect(() => {
+    for (const url of prefetchUrls) {
+      const img = new window.Image();
+      img.src = url;
+    }
+  }, [prefetchUrls]);
+
   if (!atual) return null;
 
   return (
@@ -84,11 +105,15 @@ function GalleryLightbox({
       </div>
 
       <div className="relative my-4 flex-1">
-        {/* eslint-disable-next-line @next/next/no-img-element -- mídia do CMS (MinIO), sem next/image */}
-        <img
-          src={atual.url}
+        <CmsImage
+          src={cmsFullSrc(atual)}
           alt={atual.alt || projeto.titulo}
-          className="absolute inset-0 h-full w-full object-contain"
+          fill
+          sizes="100vw"
+          quality={85}
+          priority
+          objectFit="contain"
+          className="bg-transparent"
         />
         {imagens.length > 1 && (
           <>
@@ -96,7 +121,7 @@ function GalleryLightbox({
               type="button"
               onClick={() => onIndexChange((index - 1 + imagens.length) % imagens.length)}
               aria-label="Foto anterior"
-              className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+              className="absolute left-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
             >
               <ChevronLeft className="h-5 w-5" strokeWidth={1.75} />
             </button>
@@ -104,7 +129,7 @@ function GalleryLightbox({
               type="button"
               onClick={() => onIndexChange((index + 1) % imagens.length)}
               aria-label="Próxima foto"
-              className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+              className="absolute right-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
             >
               <ChevronRight className="h-5 w-5" strokeWidth={1.75} />
             </button>
@@ -124,11 +149,13 @@ function GalleryLightbox({
                 i === index ? "border-primary-400" : "border-transparent opacity-70",
               )}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element -- mídia do CMS (MinIO), sem next/image */}
-              <img
-                src={img.url}
+              <CmsImage
+                src={cmsThumbSrc(img)}
                 alt=""
-                className="absolute inset-0 h-full w-full object-cover"
+                fill
+                sizes="80px"
+                quality={40}
+                objectFit="cover"
               />
             </button>
           ))}
@@ -142,10 +169,12 @@ function ProjetoCard({
   projeto,
   categoriaLabel,
   onOpenGallery,
+  priority,
 }: {
   projeto: ProjetoItem;
   categoriaLabel: string;
   onOpenGallery: () => void;
+  priority?: boolean;
 }) {
   const cover = projeto.imagens[0];
   const extraCount = projeto.imagens.length - 1;
@@ -164,14 +193,17 @@ function ProjetoCard({
       >
         {cover ? (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element -- mídia do CMS (MinIO), sem next/image */}
-            <img
-              src={cover.url}
+            <CmsImage
+              src={cmsThumbSrc(cover)}
               alt={cover.alt || projeto.titulo}
-              className="absolute inset-0 h-full w-full object-cover"
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              quality={65}
+              priority={priority}
+              objectFit="cover"
             />
             {extraCount > 0 && (
-              <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-neutral-900/70 px-2.5 py-1 text-micro font-semibold text-white">
+              <span className="absolute bottom-2 right-2 z-10 flex items-center gap-1 rounded-full bg-neutral-900/70 px-2.5 py-1 text-micro font-semibold text-white">
                 <ImageIcon className="h-3 w-3" strokeWidth={2} />+{extraCount}
               </span>
             )}
@@ -196,6 +228,7 @@ function ProjetoCard({
 
 export function ProjetosGrid({ items, categorias }: Props) {
   const [filter, setFilter] = useState<string>("all");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [openProjeto, setOpenProjeto] = useState<ProjetoItem | null>(null);
   const [galleryIndex, setGalleryIndex] = useState(0);
 
@@ -203,11 +236,18 @@ export function ProjetosGrid({ items, categorias }: Props) {
   const flatTree = useMemo(() => flattenSolucaoTree(categorias), [categorias]);
 
   /** Filtro por nó inclui projetos daquele id e de todos os descendentes. */
-  const visible = useMemo(() => {
+  const filtered = useMemo(() => {
     if (filter === "all") return items;
     const ids = getDescendantIds(categorias, filter);
     return items.filter((p) => ids.has(p.categoria));
   }, [items, categorias, filter]);
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [filter]);
+
+  const visible = filtered.slice(0, visibleCount);
+  const hasMore = visibleCount < filtered.length;
 
   const activeRootId =
     filter === "all"
@@ -249,24 +289,42 @@ export function ProjetosGrid({ items, categorias }: Props) {
         </div>
       )}
 
-      {visible.length === 0 ? (
+      {filtered.length === 0 ? (
         <p className="py-16 text-center text-body text-neutral-500">
           Nenhum projeto encontrado nesta categoria.
         </p>
       ) : (
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {visible.map((projeto) => (
-            <ProjetoCard
-              key={projeto.id}
-              projeto={projeto}
-              categoriaLabel={getSolucaoPathLabel(categorias, projeto.categoria)}
-              onOpenGallery={() => {
-                setOpenProjeto(projeto);
-                setGalleryIndex(0);
-              }}
-            />
-          ))}
-        </div>
+        <>
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {visible.map((projeto, i) => (
+              <ProjetoCard
+                key={projeto.id}
+                projeto={projeto}
+                categoriaLabel={getSolucaoPathLabel(categorias, projeto.categoria)}
+                priority={i < 3}
+                onOpenGallery={() => {
+                  setOpenProjeto(projeto);
+                  setGalleryIndex(0);
+                }}
+              />
+            ))}
+          </div>
+
+          {hasMore && (
+            <div className="mt-10 flex flex-col items-center gap-3">
+              <p className="text-small text-neutral-500">
+                Mostrando {visible.length} de {filtered.length} projetos
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
+              >
+                Carregar mais projetos
+              </Button>
+            </div>
+          )}
+        </>
       )}
 
       {openProjeto && (

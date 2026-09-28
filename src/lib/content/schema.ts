@@ -190,6 +190,8 @@ export const provaSocialContentSchema = z.object({
 export const galleryImageSchema = z.object({
   url: z.string().min(1),
   alt: z.string().optional(),
+  /** Variante WebP ~800px gerada no upload (MinIO). Fallback = `url`. */
+  thumbUrl: z.string().min(1).optional(),
 });
 
 export const solucaoItemSchema = z.object({

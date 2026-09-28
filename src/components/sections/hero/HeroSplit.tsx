@@ -1,6 +1,7 @@
 import { Activity, Bell, LayoutDashboard, Wifi } from "lucide-react";
 
 import { FadeInUp } from "@/components/motion/FadeInUp";
+import { CmsImage } from "@/components/shared/CmsImage";
 import { Container } from "@/components/shared/Container";
 import { Button } from "@/components/ui/button";
 import type { NormalizedHeroContent } from "@/lib/content/normalize-hero";
@@ -31,12 +32,17 @@ function HeroMediaCard({ content }: { content: NormalizedHeroContent }) {
           parallax && "hero-parallax",
         )}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={media.src}
-          alt={media.alt || ""}
-          className="aspect-[4/3] w-full object-cover"
-        />
+        <div className="relative aspect-[4/3] w-full">
+          <CmsImage
+            src={media.src}
+            alt={media.alt || ""}
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            quality={80}
+            priority
+            objectFit="cover"
+          />
+        </div>
       </div>
     );
   }
