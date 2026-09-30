@@ -5,10 +5,9 @@ import { Header } from "@/components/shared/Header";
 import { getLandingContent } from "@/lib/content/get-landing-content";
 
 /**
- * ISR curto — publish no CMS chama /api/revalidate.
- * Preview (draftMode) continua fresco via getLandingContent.
+ * O conteúdo vem da API em tempo de requisição. A URL do CMS não existe
+ * durante o `docker build`, então a página não pode ser pré-renderizada na imagem.
  */
-export const revalidate = 120;
 
 export default async function Home() {
   const content = await getLandingContent();

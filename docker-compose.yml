@@ -17,6 +17,8 @@ services:
       PORT: "3000"
       HOSTNAME: 0.0.0.0
       CMS_PROVIDER: ${CMS_PROVIDER:-api}
+      # Nome do serviço na rede bomanejo_ambiental (o mesmo usado pelo financeiro).
+      # O container se chama ambiental-api-1; o DNS estável é `api`.
       CMS_API_URL: ${CMS_API_URL:-http://api:3333}
       CMS_ORG_SLUG: ${CMS_ORG_SLUG:-ambiental-system}
       OMNICHANNEL_INGEST_SECRET: ${OMNICHANNEL_INGEST_SECRET:-}

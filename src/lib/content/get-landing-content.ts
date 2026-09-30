@@ -1,4 +1,5 @@
 import { draftMode } from "next/headers";
+import { connection } from "next/server";
 import type { z } from "zod";
 
 import {
@@ -162,6 +163,9 @@ function normalizeLandingContent(
  * Providers: local | sanity | api (ambiental-system).
  */
 export async function getLandingContent(): Promise<LandingContent> {
+  // A URL da API só existe no container em execução. Sem isto, o `next build`
+  // grava a página com o conteúdo local e o site publicado nunca consulta o CMS.
+  await connection();
   const { isEnabled: preview } = await draftMode();
   const provider = resolveProvider();
   const local = getLocalLandingContent();

@@ -25,7 +25,12 @@ export async function fetchApiLandingContent(opts?: {
 }): Promise<LandingContent | null> {
   const base = resolveApiBase();
   const slug = process.env.CMS_ORG_SLUG?.trim();
-  if (!base || !slug) return null;
+  if (!base || !slug) {
+    console.warn(
+      "[cms] CMS_API_URL ou CMS_ORG_SLUG ausente no processo — a landing usa o conteúdo local.",
+    );
+    return null;
+  }
 
   const url = new URL(`${base}/public/landing/${encodeURIComponent(slug)}`);
   if (opts?.preview) {
